@@ -43,12 +43,16 @@ jobs:
       - name: Byte-identical or red (pull requests)
         if: github.event_name == 'pull_request'
         run: git diff --exit-code -- derived
+      - name: Refresh the README charts from the new observations
+        if: github.event_name != 'pull_request'
+        continue-on-error: true # cosmetics must never block the data commit
+        run: python examples/visualize.py
       - name: Commit new observations (scheduled/manual)
         if: github.event_name != 'pull_request'
         run: |
           git config user.name "snapshotter-bot"
           git config user.email "snapshotter-bot@users.noreply.github.com"
-          git add -A derived
+          git add -A derived examples/charts
           if git diff --cached --quiet; then
             echo "nothing to commit"
             exit 0

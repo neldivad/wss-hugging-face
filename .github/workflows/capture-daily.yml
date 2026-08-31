@@ -18,7 +18,7 @@ concurrency:
 env:
   CADENCE: daily
   SHARDS: "20" # matrix cap is 256 jobs/run — aim for ~20 jobs of ~50 sources
-  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.1.1"
+  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.2.0"
 
 jobs:
   plan:

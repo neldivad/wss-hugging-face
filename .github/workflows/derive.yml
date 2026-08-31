@@ -26,7 +26,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.1.1"
+  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.2.0"
 
 jobs:
   derive:
@@ -39,7 +39,17 @@ jobs:
       - name: Install engine
         run: pip install "$ENGINE_SPEC"
       - name: Rebuild derived/ from the raw archive
-        run: snapshotter derive --parsers parsers.adoption_v1 --parsers parsers.papers_v1
+        # Parsers are auto-discovered, so adding a schema needs no workflow
+        # edit — the same rule that already holds for adding a source.
+        run: |
+          ARGS=""
+          for f in parsers/*.py; do
+            module=$(basename "$f" .py)
+            [ "$module" = "__init__" ] && continue
+            ARGS="$ARGS --parsers parsers.$module"
+          done
+          echo "parsers:$ARGS"
+          snapshotter derive $ARGS
       - name: Byte-identical or red (pull requests)
         if: github.event_name == 'pull_request'
         run: git diff --exit-code -- derived

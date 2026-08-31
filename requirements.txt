@@ -1,4 +1,4 @@
 # This repo pins one engine version; the workflows install the same pin
 # (resolving the owner as ${{ github.repository_owner }}). For local
 # development against a sibling checkout: pip install -e ../snapshotter
-snapshotter @ git+https://github.com/neldivad/snapshotter.git@v0.1.1
+snapshotter @ git+https://github.com/neldivad/snapshotter.git@v0.2.0

@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 env:
-  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.1.1"
+  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.2.0"
 
 jobs:
   validate:

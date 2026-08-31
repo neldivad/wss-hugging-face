@@ -5,7 +5,7 @@
 # and read the raw response yourself before flipping status to active —
 # see "Before enabling" in README.md.
 source_id: hf.models.text-generation
-status: paused
+status: active
 cadence: daily
 schema_id: adoption.v1
 

@@ -1,0 +1,27 @@
+# Field shape verified against the live API on 2026-08-31 (see git history).
+source_id: hf.papers.daily
+status: active
+cadence: daily
+schema_id: papers.v1
+
+publisher: Hugging Face
+publisher_tier: first_party
+destroys_own_history: true   # rolling windows and running totals only; no history endpoint
+licence: "Hub metadata via public API; see https://huggingface.co/terms-of-service"
+personal_data: none
+storage: git
+
+notes: >-
+  Interest 5: the curated daily-papers feed with community upvotes/comments. Upvote trajectories across captures + the arxiv tags in hf.models.top-downloads let us ask which papers were overrated (upvotes, no model adoption) or underrated (the reverse).
+
+endpoints:
+  - url: "https://huggingface.co/api/daily_papers?limit=100"
+    delay_seconds: 2
+
+gates:
+  expect_status: 200
+  min_bytes: 1000
+  content_type_any: [json]
+  must_contain: ["upvotes"]
+  must_not_contain: ["Access Denied"]
+  max_shrink_pct: 70

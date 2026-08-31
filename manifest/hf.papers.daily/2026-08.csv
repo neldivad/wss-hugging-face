@@ -1,0 +1,2 @@
+source_id,url,fetched_at,http_status,content_type,content_length,content_sha256,etag,last_modified,outcome,raw_ref,reason,warnings
+hf.papers.daily,https://huggingface.co/api/daily_papers?limit=100,2026-08-31T15:39:23Z,200,application/json,604834,0a58f43b75422de9e45fbf98d4f7c2793fcf07f1b723d9abc59fa9b5c8a1e3b9,"W/""93aa2-yPKrYU8Iw0da+bhfbq08DxmC02o""",,first_capture,raw/hf.papers.daily/2026/08/20260831T153923Z-0a58f43b7542.json,,

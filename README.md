@@ -46,6 +46,28 @@ More detail: [docs/data-layout.md](docs/data-layout.md). Charts:
 [examples/visualize.py](examples/visualize.py). Queries:
 [examples/queries.sql](examples/queries.sql).
 
+## What we track, and why
+
+The repo exists to answer five questions, and every registry source maps to
+at least one of them:
+
+1. **Dataset interest & trends** — `hf.datasets.top-downloads`, `.top-likes`
+2. **Model interest & trends** — `hf.models.top-downloads`, `.top-likes`,
+   `hf.models.text-generation`
+3. **Leading indicators** (what's about to be wanted, incl. which datasets
+   are worth building) — `hf.models.trending`, `hf.datasets.trending`
+4. **What underperforms** — `hf.models.newest`, `hf.datasets.newest`: daily
+   birth-cohort samples; joined against later top lists they show which
+   newcomers took off and which never found users
+5. **Paper trends, over/underrated** — `hf.papers.daily` (upvote and comment
+   trajectories), linked to real adoption through the `arxiv:` tags captured
+   in `hf.models.top-downloads`
+
+Every listing is captured globally and unfiltered (top 1,000 per sort) —
+filtering happens at query time via `pipeline_tag`, `library_name`, and
+`tags` in the raw payloads, never at capture time. Each source's registry
+file carries a `notes:` line saying which question it serves.
+
 ## What's in the repo
 
 | Folder | One-liner |

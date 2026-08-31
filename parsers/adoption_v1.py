@@ -13,11 +13,14 @@ from snapshotter import derive
 
 PARSER_VERSION = "1"
 
-# (response key, metric name, unit) — keys verified against the live API 2026-08-31
+# (response key, metric name, unit) — keys verified against the live API 2026-08-31.
+# Only keys present in the payload are emitted, so one parser serves every
+# listing source (models and datasets, whatever mix of expand[] it requests).
 METRICS = (
     ("downloads", "downloads_30d", "count/30d"),
     ("downloadsAllTime", "downloads_all_time", "count"),
     ("likes", "likes", "count"),
+    ("trendingScore", "trending_score", "score"),
 )
 
 

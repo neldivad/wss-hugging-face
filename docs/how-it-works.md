@@ -3,7 +3,7 @@
 This repo is a **capture fleet**, driven entirely by its registry. No
 workflow names a source; a handful of scheduled workflows shard whatever
 `registry/` marks active. The engine is
-[snapshotter](https://github.com/OWNER/snapshotter), pinned to one version in
+[snapshotter](https://github.com/neldivad/snapshotter), pinned to one version in
 `requirements.txt` and in every workflow's `ENGINE_SPEC`.
 
 ## The daily cycle

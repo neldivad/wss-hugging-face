@@ -87,7 +87,7 @@ file carries a `notes:` line saying which question it serves.
 
 Three scheduled workflows a day — capture (22:10 UTC), health (23:40),
 derive (00:20) — all powered by the
-[snapshotter](https://github.com/OWNER/snapshotter) engine, pinned to one
+[snapshotter](https://github.com/neldivad/snapshotter) engine, pinned to one
 version. No workflow ever names a source: capture shards whatever
 `registry/` marks active, so the infrastructure never changes when sources
 do. Failures are loud (red runs), sources that fail 5 days straight are
@@ -110,10 +110,11 @@ snapshotter capture --cadence daily        # fetch + archive + manifest
 snapshotter derive --parsers parsers.adoption_v1   # archive → CSVs
 ```
 
-To go live on GitHub: push this repo and the engine repo under the same
-owner (tag the engine `v0.1.0`, replace `OWNER` in `requirements.txt`), set
-the repo secret `SNAPSHOTTER_CONTACT`, run the `capture-daily` workflow once
-by hand, then let the cron take over.
+This repo runs live at `neldivad/wss-hugging-face`, against the engine at
+[neldivad/snapshotter](https://github.com/neldivad/snapshotter) (tag
+`v0.1.0`). To stand up a fork of your own: push both repos under one owner,
+set the repo secret `SNAPSHOTTER_CONTACT`, run the `capture-daily` workflow
+once by hand, then let the cron take over.
 
 ## Licences
 

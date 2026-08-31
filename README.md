@@ -29,7 +29,25 @@ observation tables from the archive.
 Start here: [docs/how-it-works.md](docs/how-it-works.md) ·
 [docs/data-layout.md](docs/data-layout.md) ·
 [examples/queries.sql](examples/queries.sql) ·
-[examples/load_observations.py](examples/load_observations.py)
+[examples/load_observations.py](examples/load_observations.py) ·
+[examples/visualize.py](examples/visualize.py)
+
+## The data, at a glance
+
+![Most downloaded text-generation models](examples/charts/leaderboard.svg)
+
+Rendered from the latest real capture by
+[examples/visualize.py](examples/visualize.py) — stdlib-only, deterministic
+SVG; re-run it any time to refresh the charts from `derived/`.
+
+![Adoption curves](examples/charts/adoption-curves.svg)
+
+This is what the dataset becomes with months of daily captures: overtakes,
+decay, and deaths, all reconstructable to the raw bytes. Today's render uses
+the engine sandbox's **synthetic** archive (clearly captioned — the analysis
+was proven against planted ground truth before real data existed); once ≥ 8
+real capture dates accumulate, `visualize.py` switches to real history
+automatically.
 
 ## How it is built
 

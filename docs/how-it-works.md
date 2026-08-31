@@ -39,6 +39,12 @@ workflow edits, ever. Start it `paused`, run
 `snapshotter doctor <source_id>`, read the raw response, then flip to
 `active`.
 
+The workflows here cover `cadence: daily` only, because that's all the
+registry currently holds. The first `weekly` or `monthly` source also needs
+its capture workflow: copy `capture-daily.yml`, change three lines (`name`,
+the cron, `CADENCE`) — or take the template from the engine's
+`examples/workflows/`. That's a one-time cost per cadence, not per source.
+
 ## Removing / pausing a source
 
 Change its `status`. The raw archive and manifest history stay.

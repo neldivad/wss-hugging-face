@@ -1,10 +1,1 @@
-{
-  "cadence": "daily",
-  "completed_at": "2026-08-31T15:39:26Z",
-  "outcomes": {
-    "changed": 1,
-    "first_capture": 9
-  },
-  "shard": "1/1",
-  "sources": 10
-}
+{"cadence":"daily","completed_at":"2026-08-31T17:08:30Z","run_id":"33417879967","workflow":"capture-daily"}

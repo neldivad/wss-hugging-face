@@ -7,7 +7,7 @@ across daily captures are what makes over/underrated calls defensible.
 
 import json
 
-from snapshotter import derive
+from wss import derive
 
 PARSER_VERSION = "1"
 

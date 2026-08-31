@@ -2,7 +2,7 @@
 """Render example visualizations from derived/observations/*.csv as SVG.
 
     python examples/visualize.py                       # leaderboard from this repo
-    python examples/visualize.py --timeseries-root ../snapshotter/sandbox/out
+    python examples/visualize.py --timeseries-root ../wss-engine/sandbox/out
 
 Two charts, written to examples/charts/:
 
@@ -217,7 +217,7 @@ def adoption_curves(rows: list[dict], out: Path, synthetic: bool) -> str:
             body.append(f'<line x1="{ex + 7}" y1="{ey:.1f}" x2="{anchor_x - 2}" y2="{y - 3.5:.1f}" stroke="{BASELINE}" stroke-width="1"/>')
         body.append(svg_text(anchor_x, y + 3.5, name, size=11, fill=MUTED if died else INK, weight="normal" if died else "600"))
 
-    caption = "source: snapshotter sandbox — ground truth planted, recovered by this chart" if synthetic else "source: wss-hugging-face · hf.models.text-generation · CC-BY-4.0"
+    caption = "source: wss sandbox — ground truth planted, recovered by this chart" if synthetic else "source: wss-hugging-face · hf.models.text-generation · CC-BY-4.0"
     body.append(svg_text(24, height - 10, caption, size=10, fill=MUTED))
 
     desc = "Line chart of trailing 30-day downloads per model over time on a log scale, one line per model."
@@ -228,7 +228,7 @@ def adoption_curves(rows: list[dict], out: Path, synthetic: bool) -> str:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--root", default=str(REPO), help="data root for the leaderboard (default: this repo)")
-    ap.add_argument("--timeseries-root", help="fallback archive for adoption curves (e.g. ../snapshotter/sandbox/out)")
+    ap.add_argument("--timeseries-root", help="fallback archive for adoption curves (e.g. ../wss-engine/sandbox/out)")
     ap.add_argument("--min-real-dates", type=int, default=8, help="real capture dates needed before curves switch to real data")
     args = ap.parse_args()
 

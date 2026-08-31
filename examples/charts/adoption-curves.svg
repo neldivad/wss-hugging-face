@@ -36,5 +36,5 @@
 <text x="764.0" y="193.9" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">steady-diffuser  250.7K</text>
 <text x="764.0" y="213.5" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#0b0b0b" text-anchor="start" font-weight="600" style="">legacy-gpt  165.5K</text>
 <text x="513.4" y="450.2" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="11" fill="#898781" text-anchor="start" font-weight="normal" style="">flash-1b (gone)</text>
-<text x="24.0" y="490.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">source: snapshotter sandbox — ground truth planted, recovered by this chart</text>
+<text x="24.0" y="490.0" font-family='system-ui, -apple-system, "Segoe UI", sans-serif' font-size="10" fill="#898781" text-anchor="start" font-weight="normal" style="">source: wss sandbox — ground truth planted, recovered by this chart</text>
 </svg>

@@ -1,7 +1,7 @@
 # First source of the fleet. Response field shape (id, downloads,
 # downloadsAllTime, likes, createdAt, lastModified via expand[]) was verified
 # against the live API on 2026-08-31. Still: run
-#     snapshotter doctor hf.models.text-generation
+#     wss doctor hf.models.text-generation
 # and read the raw response yourself before flipping status to active —
 # see "Before enabling" in README.md.
 source_id: hf.models.text-generation

@@ -3,7 +3,7 @@
 This repo is a **capture fleet**, driven entirely by its registry. No
 workflow names a source; a handful of scheduled workflows shard whatever
 `registry/` marks active. The engine is
-[snapshotter](https://github.com/neldivad/snapshotter), pinned to one version in
+[wss](https://github.com/neldivad/wss-engine), pinned to one version in
 `requirements.txt` and in every workflow's `ENGINE_SPEC`.
 
 ## The daily cycle
@@ -17,7 +17,7 @@ workflow names a source; a handful of scheduled workflows shard whatever
 Each capture job, per source in its shard:
 
 1. honours `robots.txt`, waits the per-host delay, sends an identifiable
-   user-agent carrying the `SNAPSHOTTER_CONTACT` secret
+   user-agent carrying the `WSS_CONTACT` secret
 2. fetches with 3 retries + exponential backoff
 3. runs the entry's **gates** (status, size, content-type, must/must-not
    contain, shrink guard) — a failed gate quarantines the bytes, which never
@@ -36,7 +36,7 @@ re-fetching a page that has since changed.
 Create `registry/<source_id>.yml` (see the engine's
 `examples/registry/example.web.stats.yml`). That is the whole change — no
 workflow edits, ever. Start it `paused`, run
-`snapshotter doctor <source_id>`, read the raw response, then flip to
+`wss doctor <source_id>`, read the raw response, then flip to
 `active`.
 
 The workflows here cover `cadence: daily` only, because that's all the
@@ -60,26 +60,26 @@ triage is a weekly read of that file. To re-enable: fix the cause, set
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt      # or, against a sibling checkout: pip install -e ../snapshotter
-export SNAPSHOTTER_CONTACT="you@example.com"
+pip install -r requirements.txt      # or, against a sibling checkout: pip install -e ../wss-engine
+export WSS_CONTACT="you@example.com"
 
-snapshotter validate
-snapshotter doctor hf.models.text-generation
-snapshotter capture --cadence daily          # --shard 1/1 by default
-snapshotter derive --parsers parsers.adoption_v1
-snapshotter health --dry-run
+wss validate
+wss doctor hf.models.text-generation
+wss capture --cadence daily          # --shard 1/1 by default
+wss derive --parsers parsers.adoption_v1
+wss health --dry-run
 ```
 
 ## Standing up your own fork
 
 This repo runs live at `neldivad/wss-hugging-face` against the engine at
-[neldivad/snapshotter](https://github.com/neldivad/snapshotter). To run your
+[neldivad/wss-engine](https://github.com/neldivad/wss-engine). To run your
 own copy:
 
 1. Fork (or push) **both repos under one GitHub owner** — the workflows
-   install the engine from `github.com/<your-owner>/snapshotter` at the tag
+   install the engine from `github.com/<your-owner>/wss-engine` at the tag
    pinned in `ENGINE_SPEC`.
-2. Set the repo secret `SNAPSHOTTER_CONTACT` to an email a publisher can
+2. Set the repo secret `WSS_CONTACT` to an email a publisher can
    reach you at — capture refuses to run without it.
 3. Run the `capture-daily` workflow once by hand (Actions → capture-daily →
    Run workflow), confirm the bot's data commit lands, then let the cron

@@ -1,15 +1,15 @@
 """Parser for schema adoption.v1 — Hugging Face `/api/models` listings.
 
 Pure function of the archived bytes. A bug here is fixed by bumping
-PARSER_VERSION and re-running `snapshotter derive` over the raw archive —
+PARSER_VERSION and re-running `wss derive` over the raw archive —
 never by re-fetching.
 
-Run: snapshotter derive --parsers parsers.adoption_v1
+Run: wss derive --parsers parsers.adoption_v1
 """
 
 import json
 
-from snapshotter import derive
+from wss import derive
 
 PARSER_VERSION = "1"
 

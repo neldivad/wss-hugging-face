@@ -6,7 +6,6 @@ raw/         archived response bytes, verbatim, forever
 manifest/    append-only fetch log — the provenance record
 derived/     observation tables rebuilt from raw/ (never hand-edited)
 health/      health.csv, worst-first, rebuilt daily
-cohorts/     frozen cohort vintages (manual, quarterly)
 state/       heartbeat + auto-disable report
 ```
 

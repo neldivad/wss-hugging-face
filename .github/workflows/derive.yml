@@ -39,7 +39,7 @@ jobs:
       - name: Install engine
         run: pip install "$ENGINE_SPEC"
       - name: Rebuild derived/ from the raw archive
-        run: snapshotter derive --parsers parsers.adoption_v1 --parsers parsers.adoption_member_v1
+        run: snapshotter derive --parsers parsers.adoption_v1
       - name: Byte-identical or red (pull requests)
         if: github.event_name == 'pull_request'
         run: git diff --exit-code -- derived

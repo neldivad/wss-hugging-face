@@ -26,7 +26,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.1.0"
+  ENGINE_SPEC: "snapshotter @ git+https://github.com/${{ github.repository_owner }}/snapshotter.git@v0.1.1"
 
 jobs:
   derive:

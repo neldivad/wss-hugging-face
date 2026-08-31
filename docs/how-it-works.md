@@ -60,7 +60,7 @@ triage is a weekly read of that file. To re-enable: fix the cause, set
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
-pip install -e ../snapshotter        # or: pip install -r requirements.txt
+pip install -r requirements.txt      # or, against a sibling checkout: pip install -e ../snapshotter
 export SNAPSHOTTER_CONTACT="you@example.com"
 
 snapshotter validate
@@ -69,3 +69,18 @@ snapshotter capture --cadence daily          # --shard 1/1 by default
 snapshotter derive --parsers parsers.adoption_v1
 snapshotter health --dry-run
 ```
+
+## Standing up your own fork
+
+This repo runs live at `neldivad/wss-hugging-face` against the engine at
+[neldivad/snapshotter](https://github.com/neldivad/snapshotter). To run your
+own copy:
+
+1. Fork (or push) **both repos under one GitHub owner** — the workflows
+   install the engine from `github.com/<your-owner>/snapshotter` at the tag
+   pinned in `ENGINE_SPEC`.
+2. Set the repo secret `SNAPSHOTTER_CONTACT` to an email a publisher can
+   reach you at — capture refuses to run without it.
+3. Run the `capture-daily` workflow once by hand (Actions → capture-daily →
+   Run workflow), confirm the bot's data commit lands, then let the cron
+   take over.

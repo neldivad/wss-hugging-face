@@ -1,33 +1,37 @@
 # wss-hugging-face — Hugging Face Adoption History
 
-Daily point-in-time capture of Hugging Face model adoption metrics
-(downloads, likes). The public API only ever shows a rolling 30-day window
-and a running total — **no history endpoint exists, so every uncaptured day
-is gone for good**. This repo captures those numbers every day, keeps the
-raw API responses verbatim, and rebuilds clean CSVs from that archive.
+A GitHub Actions pipeline that captures Hugging Face adoption data **every
+day** — model and dataset downloads, likes, trending scores, new arrivals,
+and daily-paper votes — and publishes it in this repo as clean, append-only
+CSVs. The Hugging Face API only ever shows a rolling 30-day window and a
+running total; **no history endpoint exists, so every uncaptured day is gone
+for good**. This repo is the history.
 
 ![Most downloaded text-generation models](examples/charts/leaderboard.svg)
 
 ![Adoption curves](examples/charts/adoption-curves.svg)
 
 *Both charts come from [examples/visualize.py](examples/visualize.py). The
-leaderboard is the latest real capture; the curves are the engine sandbox's
-synthetic archive (captioned as such) until ≥ 8 real capture days exist,
-then the script switches to real history automatically.*
+leaderboard is the latest real capture; the curves are rendered from a
+synthetic stand-in archive (captioned as such) until ≥ 8 real capture days
+exist, then the script switches to real history automatically.*
 
-## Use the data
+## The data you get
 
-The files you want are `derived/observations/<YYYY-MM>.csv` — one row per
-model, per metric, per day:
+The files to query are `derived/observations/<YYYY-MM>.csv` — one row per
+entity, per metric, per day:
 
 ```
 series_id, entity_id, observed_at, captured_at, metric, value, unit, source_id, raw_ref, parser_version
 ```
 
-- `entity_id` — the model (e.g. `Qwen/Qwen3-0.6B`)
-- `metric` — `downloads_30d`, `downloads_all_time`, or `likes`
+- `series_id` — which collection stream (see Coverage below)
+- `entity_id` — the model / dataset / paper (e.g. `Qwen/Qwen3-0.6B`, arxiv `2608.26105`)
+- `metric` — `downloads_30d`, `downloads_all_time`, `likes`,
+  `trending_score`, `upvotes`, `comments`
 - `observed_at` / `captured_at` — when the fact was true / when we saw it
-- `raw_ref` — the exact archived API response this row was parsed from
+- `raw_ref` — the exact archived API response the row was parsed from, so
+  every number is checkable back to bytes
 
 Three ways in:
 
@@ -42,31 +46,57 @@ python examples/load_observations.py
 duckdb -c "SELECT * FROM read_csv_auto('derived/observations/*.csv') LIMIT 5"
 ```
 
-More detail: [docs/data-layout.md](docs/data-layout.md). Charts:
-[examples/visualize.py](examples/visualize.py). Queries:
-[examples/queries.sql](examples/queries.sql).
+More detail: [docs/data-layout.md](docs/data-layout.md) ·
+[examples/queries.sql](examples/queries.sql)
 
-## What we track, and why
+## Coverage
 
-The repo exists to answer five questions, and every registry source maps to
-at least one of them:
+Every series' date range, human-readable here and machine-readable in
+[health/health.csv](health/health.csv) (`first_success_at` →
+`last_success_at`, live-updated daily):
 
-1. **Dataset interest & trends** — `hf.datasets.top-downloads`, `.top-likes`
-2. **Model interest & trends** — `hf.models.top-downloads`, `.top-likes`,
-   `hf.models.text-generation`
-3. **Leading indicators** (what's about to be wanted, incl. which datasets
-   are worth building) — `hf.models.trending`, `hf.datasets.trending`
-4. **What underperforms** — `hf.models.newest`, `hf.datasets.newest`: daily
-   birth-cohort samples; joined against later top lists they show which
-   newcomers took off and which never found users
-5. **Paper trends, over/underrated** — `hf.papers.daily` (upvote and comment
-   trajectories), linked to real adoption through the `arxiv:` tags captured
-   in `hf.models.top-downloads`
+| series | what it lists | covered since | status |
+| --- | --- | --- | --- |
+| `hf.models.top-downloads` | top 1,000 models by 30-day downloads (with tags, task, library) | 2026-08-31 | ongoing |
+| `hf.models.top-likes` | top 1,000 models by likes | 2026-08-31 | ongoing |
+| `hf.models.trending` | top 1,000 models by trending score | 2026-08-31 | ongoing |
+| `hf.models.newest` | the 1,000 most recently created models (daily birth sample) | 2026-08-31 | ongoing |
+| `hf.models.text-generation` | top 1,000 text-generation models by downloads | 2026-08-31 | ongoing |
+| `hf.datasets.top-downloads` | top 1,000 datasets by 30-day downloads | 2026-08-31 | ongoing |
+| `hf.datasets.top-likes` | top 1,000 datasets by likes | 2026-08-31 | ongoing |
+| `hf.datasets.trending` | top 1,000 datasets by trending score | 2026-08-31 | ongoing |
+| `hf.datasets.newest` | the 1,000 most recently created datasets | 2026-08-31 | ongoing |
+| `hf.papers.daily` | the daily-papers feed (100-item window, upvotes + comments) | 2026-08-31 | ongoing |
 
-Every listing is captured globally and unfiltered (top 1,000 per sort) —
-filtering happens at query time via `pipeline_tag`, `library_name`, and
-`tags` in the raw payloads, never at capture time. Each source's registry
-file carries a `notes:` line saying which question it serves.
+Every listing is captured at the API's maximum size (1,000 items; the papers
+feed caps at 100) and unfiltered — slicing by task, library, or tags happens
+at query time. The rules of this table:
+
+- **A new series** gets a new row with the date its coverage starts.
+- **A discontinued series** keeps its row with a *covered until* date and
+  status *discontinued* — its archive, manifest, and observations stay in
+  the repo forever. Nothing already published is ever removed.
+- One caveat, recorded per source in `registry/`: the `newest` streams are
+  daily *samples* (HF sees ~3–5K births/day, more than one page), consistent
+  window every day — good for cohort comparisons, not a complete census.
+
+## What you can build from it
+
+- **Adoption / decline curves** per model, dataset, task, or library — the
+  chart above (see `examples/visualize.py`)
+- **Daily leaderboards and rank-change feeds** — who entered, who fell out
+- **Hype-vs-usage gaps** — likes and trending score diverging from actual
+  downloads flags overrated and sleeper assets
+- **Birth-cohort survival** — of the models/datasets born each week, how
+  many ever find users; which kinds underperform
+- **Paper over/underrated index** — upvote trajectories from
+  `hf.papers.daily` joined to real adoption via the `arxiv:` tags captured
+  in `hf.models.top-downloads`
+- **Topic waves** — the raw papers feed carries titles, abstracts, and
+  keywords per paper, so trend analysis needs no PDF downloads
+
+Ready-made starting points: [examples/queries.sql](examples/queries.sql)
+(leaderboard, 28-day growth, lifespans, interval volumes).
 
 ## What's in the repo
 
@@ -75,46 +105,24 @@ file carries a `notes:` line saying which question it serves.
 | `derived/` | **the CSVs you query** — rebuilt from the archive, never hand-edited |
 | `raw/` | archived API responses, byte-for-byte, forever |
 | `manifest/` | log of every fetch, even no-change ones — the provenance record |
-| `registry/` | one YAML file per tracked source; **adding a source = adding one file** |
-| `parsers/` | turns raw JSON into CSV rows (runs at derive time, never at capture time) |
-| `health/` | one CSV saying whether every source is still alive, worst first |
-| `state/` | heartbeat of the last run + auto-disable report |
+| `registry/` | one YAML file per collection stream; adding a stream = adding one file |
+| `parsers/` | turns raw JSON into CSV rows |
+| `health/` | per-series coverage range + liveness, worst first |
+| `state/` | heartbeat of the last run |
 | `examples/` | queries, loaders, charts |
 | `docs/` | [how-it-works](docs/how-it-works.md) · [data-layout](docs/data-layout.md) |
-| `.github/` | the cron workflows (capture → health → derive, daily) |
+| `.github/` | the cron workflows |
 
 ## How it runs
 
-Three scheduled workflows a day — capture (22:10 UTC), health (23:40),
-derive (00:20) — all powered by the
-[snapshotter](https://github.com/neldivad/snapshotter) engine, pinned to one
-version. No workflow ever names a source: capture shards whatever
-`registry/` marks active, so the infrastructure never changes when sources
-do. Failures are loud (red runs), sources that fail 5 days straight are
-auto-disabled with a GitHub issue, and a heartbeat commit proves the cron is
-alive even on quiet days.
-
-Full walkthrough, including how to add/pause a source and what to do when
-something breaks: [docs/how-it-works.md](docs/how-it-works.md).
-
-## Run it yourself
-
-```bash
-python -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt            # or: pip install -e ../snapshotter
-export SNAPSHOTTER_CONTACT="you@example.com"
-
-snapshotter validate                       # check the registry
-snapshotter doctor hf.models.text-generation   # dry-run one source, see raw bytes
-snapshotter capture --cadence daily        # fetch + archive + manifest
-snapshotter derive --parsers parsers.adoption_v1   # archive → CSVs
-```
-
-This repo runs live at `neldivad/wss-hugging-face`, against the engine at
-[neldivad/snapshotter](https://github.com/neldivad/snapshotter) (tag
-`v0.1.0`). To stand up a fork of your own: push both repos under one owner,
-set the repo secret `SNAPSHOTTER_CONTACT`, run the `capture-daily` workflow
-once by hand, then let the cron take over.
+Three scheduled GitHub Actions a day — capture (22:10 UTC), health (23:40),
+derive (00:20). The bot commits **data only** (`raw/`, `manifest/`,
+`derived/`, `health/`, `state/`) — it never changes code or workflows; the
+one config it may touch is flipping a repeatedly-failing stream's `status`
+in `registry/` to `auto_disabled`, with a GitHub issue explaining why.
+Failures are loud (red runs). Operational details, adding a stream, and
+running it locally or as your own fork:
+[docs/how-it-works.md](docs/how-it-works.md).
 
 ## Licences
 

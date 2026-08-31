@@ -1,0 +1,5 @@
+# This repo pins one engine version; workflows install the same pin.
+# The workflows resolve OWNER as ${{ github.repository_owner }} — this line is
+# for local use. Replace OWNER with the GitHub owner of the snapshotter repo,
+# or for local development against a sibling checkout:  pip install -e ../snapshotter
+snapshotter @ git+https://github.com/OWNER/snapshotter.git@v0.1.0

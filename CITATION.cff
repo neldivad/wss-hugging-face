@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it."
+type: dataset
+title: "Hugging Face Adoption History (wss-hugging-face)"
+abstract: >-
+  Point-in-time capture of Hugging Face Hub model adoption metrics
+  (downloads, likes) for the text-generation ecosystem. The public API
+  exposes only rolling windows and running totals; this archive preserves
+  the history the source destroys, with an append-only manifest as the
+  provenance record.
+authors:
+  - name: "neldivad"
+    website: "https://github.com/neldivad"
+license: CC-BY-4.0
+keywords:
+  - git-scraping
+  - open-data
+  - point-in-time-data
+  - dataset
+  - hugging-face

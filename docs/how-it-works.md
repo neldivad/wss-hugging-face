@@ -61,7 +61,7 @@ triage is a weekly read of that file. To re-enable: fix the cause, set
 ```bash
 python -m venv .venv && . .venv/bin/activate
 pip install -r requirements.txt      # or, against a sibling checkout: pip install -e ../wss-engine
-export WSS_CONTACT="you@example.com"
+export WSS_CONTACT="neldivad +https://github.com/neldivad/wss-hugging-face"
 
 wss validate
 wss doctor hf.models.text-generation
@@ -79,8 +79,9 @@ own copy:
 1. Fork (or push) **both repos under one GitHub owner** — the workflows
    install the engine from `github.com/<your-owner>/wss-engine` at the tag
    pinned in `ENGINE_SPEC`.
-2. Set the repo secret `WSS_CONTACT` to an email a publisher can
-   reach you at — capture refuses to run without it.
+2. Set the repo secret `WSS_CONTACT` to identify whoever runs the capture —
+   `<your-username> +https://github.com/<owner>/<repo>` needs no personal
+   data. Capture refuses to run without it.
 3. Run the `capture-daily` workflow once by hand (Actions → capture-daily →
    Run workflow), confirm the bot's data commit lands, then let the cron
    take over.

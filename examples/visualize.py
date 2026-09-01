@@ -225,6 +225,66 @@ def adoption_curves(rows: list[dict], out: Path, synthetic: bool) -> str:
     return f"{out.relative_to(REPO)} — {len(keep)} series over {len(all_dates)} capture dates" + (" (synthetic)" if synthetic else "")
 
 
+def papers_in_production(root: Path, out: Path, top_n: int = 18) -> str:
+    """Which papers' ideas are actually built into models people download.
+
+    Citation counts measure academic attention. This measures production
+    adoption: how many of the top-1,000 most-downloaded models carry an
+    `arxiv:` tag for the paper. It is the difference between an idea being
+    discussed and an idea having won.
+    """
+    import json
+
+    rows = []
+    for partition in sorted((root / "derived" / "observations").glob("*.csv")):
+        with partition.open(encoding="utf-8", newline="") as fh:
+            rows.extend(
+                r for r in csv.DictReader(fh)
+                if r["metric"] == "models_implementing" and r["series_id"] == "hf.models.top-downloads"
+            )
+    if not rows:
+        return "papers-in-production.svg skipped: no models_implementing observations yet"
+
+    latest = max(r["observed_at"] for r in rows)
+    ranked = sorted(
+        ((r["entity_id"].removeprefix("paper:arxiv:"), int(r["value"])) for r in rows if r["observed_at"] == latest),
+        key=lambda kv: (-kv[1], kv[0]),
+    )
+    titles = {}
+    cache = root / "examples" / "paper-titles.json"
+    if cache.exists():
+        titles = json.loads(cache.read_text(encoding="utf-8"))
+
+    top = ranked[:top_n]
+    width, left, right, top_pad = 940.0, 430.0, 90.0, 74.0
+    bar_h, gap = 16.0, 8.0
+    height = top_pad + len(top) * (bar_h + gap) + 34
+    vmax = top[0][1]
+    span = width - left - right
+
+    body = [
+        chart_header(
+            width,
+            "Papers that actually shipped",
+            f"models among the top 1,000 by downloads that implement each paper · "
+            f"{len(ranked)} papers represented · snapshot {latest[:10]}",
+        )
+    ]
+    body.append(f'<line x1="{left}" y1="{top_pad - 8}" x2="{left}" y2="{height - 30}" stroke="{BASELINE}" stroke-width="1"/>')
+    for i, (arxiv_id, count) in enumerate(top):
+        y = top_pad + i * (bar_h + gap)
+        w = max(2.0, count / vmax * span)
+        body.append(rounded_end_bar(left, y, w, bar_h))
+        label = titles.get(arxiv_id, arxiv_id)
+        body.append(svg_text(left - 10, y + bar_h - 4, truncate(label, left - 40, 11), size=11, fill=INK2, anchor="end"))
+        body.append(svg_text(left + w + 7, y + bar_h - 4, str(count), size=11, fill=INK, weight="600", tabular=True))
+    body.append(
+        svg_text(24, height - 6, "source: wss-hugging-face · hf.models.top-downloads · titles via arXiv · CC-BY-4.0", size=10, fill=MUTED)
+    )
+    out.write_text(wrap_svg(width, height, "Papers that actually shipped", "Ranked bar chart of research papers by how many of the top 1,000 Hugging Face models implement them.", "\n".join(body)), encoding="utf-8")
+    return f"{out.relative_to(REPO)} — {len(top)} of {len(ranked)} papers"
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--root", default=str(REPO), help="data root for the leaderboard (default: this repo)")
@@ -247,6 +307,8 @@ def main() -> int:
         print(adoption_curves(ts_rows, OUT_DIR / "adoption-curves.svg", synthetic=True))
     else:
         print(f"adoption-curves.svg skipped: only {len(real_dates)} real capture date(s) (< {args.min_real_dates}) and no --timeseries-root given")
+
+    print(papers_in_production(Path(args.root), OUT_DIR / "papers-in-production.svg"))
     return 0
 
 

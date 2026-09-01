@@ -26,6 +26,25 @@ that other people chose to adopt — YaRN's context extension at 37, SigLIP at
 10, and the 2020 ViT paper still shipping in 9. Tracked over months, this
 separates ideas that won from ideas that merely trended.
 
+## Research questions
+
+The point of this repo is the questions, not the folders. Every source exists
+to answer one; a source that answers none should be dropped, and a question
+nothing answers is the next thing to build. **Append freely** — an open
+question with no data is a useful entry, not a gap to hide.
+
+Status: **open** (nothing captured) · **accruing** (captured, needs weeks) ·
+**answerable** (enough history) · **answered** (finding linked).
+
+| # | Question | Status | Answered by |
+| --- | --- | --- | --- |
+| Q1 | Which research ideas actually **ship**? Citations measure attention; models implementing a paper measure adoption. | answerable now | `hf.models.top-downloads` (`models_implementing`) |
+| Q2 | Is one architecture displacing another in production, or only in discourse? (today: 716 transformers to 1 jamba) | accruing | `hf.models.top-downloads` (`models_using`) |
+| Q3 | Of the models and datasets born each week, how many ever find users — and which kinds never do? | accruing (needs ~12 weeks) | `hf.models.newest`, `hf.datasets.newest` |
+| Q4 | Where do likes and trending diverge from downloads? That gap is hype versus use. | accruing | `.top-likes`, `.trending` vs `.top-downloads` |
+| Q5 | Which datasets lead model releases — is there a dataset that precedes a wave of models built on it? | open — needs the dataset↔model link extracted | `hf.datasets.*` + model tags |
+| Q6 | Are daily-paper upvotes predictive of production adoption, or uncorrelated? Over- and underrated papers. | accruing | `hf.papers.daily` + Q1 |
+
 ## The data you get
 
 The files to query are `derived/observations/<YYYY-MM>.csv` — one row per

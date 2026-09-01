@@ -11,10 +11,20 @@ for good**. This repo is the history.
 
 ![Adoption curves](examples/charts/adoption-curves.svg)
 
-*Both charts come from [examples/visualize.py](examples/visualize.py). The
+![Papers that actually shipped](examples/charts/papers-in-production.svg)
+
+*Charts come from [examples/visualize.py](examples/visualize.py). The
 leaderboard is the latest real capture; the curves are rendered from a
 synthetic stand-in archive (captioned as such) until ≥ 8 real capture days
 exist, then the script switches to real history automatically.*
+
+**That third chart is adoption, not attention.** Citation counts measure
+academic interest; this counts how many of the top 1,000 most-downloaded
+models actually carry each paper's `arxiv:` tag. The mix is the point:
+model-family reports (Qwen3, 42 models) sit beside pure *technique* papers
+that other people chose to adopt — YaRN's context extension at 37, SigLIP at
+10, and the 2020 ViT paper still shipping in 9. Tracked over months, this
+separates ideas that won from ideas that merely trended.
 
 ## The data you get
 

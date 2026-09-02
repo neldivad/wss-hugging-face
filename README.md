@@ -62,7 +62,14 @@ series_id, entity_id, observed_at, captured_at, metric, value, unit, source_id, 
 - `raw_ref` — the exact archived API response the row was parsed from, so
   every number is checkable back to bytes
 
-Three ways in:
+**Reading this data needs nothing** — no key, no account, not even a clone:
+
+```bash
+B=https://raw.githubusercontent.com/neldivad/wss-hugging-face/main/derived/observations
+duckdb -c "SELECT * FROM read_csv_auto('$B/2026-09.csv') LIMIT 5"
+```
+
+Three ways in once cloned:
 
 ```bash
 # 1. just read the CSVs — no tooling required

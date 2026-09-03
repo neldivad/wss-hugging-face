@@ -1,7 +1,21 @@
-# wss-hugging-face
+<h1 align="center">wss-hugging-face</h1>
 
-**What the open-model ecosystem is actually adopting**, captured daily —
-because Hugging Face publishes no history.
+<p align="center">
+  <strong>What the open-model ecosystem is actually adopting, captured daily</strong>
+</p>
+
+<div align="center">
+
+  <a href="https://github.com/neldivad/wss-hugging-face/actions/workflows/capture-daily.yml"><img alt="capture status" src="https://img.shields.io/github/actions/workflow/status/neldivad/wss-hugging-face/capture-daily.yml?label=capture&style=flat-square"></a>
+  <a href="https://github.com/neldivad/wss-hugging-face/commits"><img alt="last capture" src="https://img.shields.io/github/last-commit/neldivad/wss-hugging-face?label=last%20capture&style=flat-square"></a>
+  <a href="https://github.com/neldivad/wss-hugging-face/blob/main/LICENSE"><img alt="licence" src="https://img.shields.io/github/license/neldivad/wss-hugging-face?style=flat-square"></a>
+  <a href="https://github.com/neldivad/wss-hugging-face"><img alt="stars" src="https://img.shields.io/github/stars/neldivad/wss-hugging-face?style=social"></a>
+
+</div>
+
+<p align="center">
+  <sub>fleet: <a href="https://github.com/neldivad/wss-engine">engine</a> · <strong>hugging face</strong> · <a href="https://github.com/neldivad/wss-openrouter">openrouter</a> · <a href="https://github.com/neldivad/wss-cloud-footprint">cloud footprint</a> · <a href="https://github.com/neldivad/wss-mining-pipeline">mining</a></sub>
+</p>
 
 The API shows a rolling 30-day download count and a running total. There is no
 history endpoint, no window to page back through. So the day a model took off,
